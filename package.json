@@ -3,22 +3,34 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "postinstall": "wagmi generate",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/next-js": "^2.1.5",
+    "@chakra-ui/react": "^2.8.1",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@privy-io/react-auth": "^1.43.2",
+    "@privy-io/wagmi-connector": "^0.1.4",
+    "@wagmi/chains": "^1.8.0",
+    "framer-motion": "^10.16.4",
+    "next": "13.5.4",
     "react": "^18",
     "react-dom": "^18",
-    "next": "13.5.4"
+    "viem": "^1.15.4",
+    "wagmi": "^1.4.3"
   },
   "devDependencies": {
-    "typescript": "^5",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@wagmi/cli": "^1.5.2",
     "eslint": "^8",
-    "eslint-config-next": "13.5.4"
+    "eslint-config-next": "13.5.4",
+    "typescript": "^5"
   }
 }

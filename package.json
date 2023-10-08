@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "postinstall": "wagmi generate",
+    "postinstall": "wagmi generate && .bin/prefix.sh '// @ts-nocheck' 'src/generated/*.ts'",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
@@ -31,6 +31,6 @@
     "@wagmi/cli": "^1.5.2",
     "eslint": "^8",
     "eslint-config-next": "13.5.4",
-    "typescript": "^5"
+    "typescript": "5.0.4"
   }
 }

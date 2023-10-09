@@ -1,22 +1,37 @@
 "use client";
 
+import { useIsContractWallet } from "@/components/hooks/isContractWallet";
 import {
+  storageABI,
   useStorageRetrieve,
   useStorageStore,
-  storageABI,
 } from "@/generated/wagmi";
-import { Button, Flex, FormControl, Input, Text } from "@chakra-ui/react";
+import { resolveSafeTx } from "@/utils/safe";
+import { safeDecodeLogs } from "@/utils/safeDecodeLogs";
+import {
+  Button,
+  Flex,
+  FormControl,
+  Input,
+  Text,
+  useToast,
+} from "@chakra-ui/react";
 import { usePrivyWagmi } from "@privy-io/wagmi-connector";
 import { useCallback, useEffect, useState } from "react";
 import { decodeEventLog } from "viem";
-import { useWaitForTransaction } from "wagmi";
+import { useNetwork, useWaitForTransaction } from "wagmi";
 import { WriteContractResult } from "wagmi/actions";
 
 export default function Home() {
-  const { ready, wallet } = usePrivyWagmi();
+  const { ready, wallet: activeWallet, setActiveWallet } = usePrivyWagmi();
+  const { chain } = useNetwork();
+
+  const toast = useToast();
   const [newVal, setNewVal] = useState<number>();
   const [curVal, setCurVal] = useState<number>();
   const [tx, setTx] = useState<WriteContractResult>();
+
+  const isContractWallet = useIsContractWallet();
 
   const { data, error, status } = useStorageRetrieve();
   const { writeAsync } = useStorageStore();
@@ -31,38 +46,45 @@ export default function Home() {
   useEffect(() => {
     if (!receipt) return;
 
-    const numberChangedEvent = receipt.logs
-      .map((log) =>
-        decodeEventLog({
-          abi: storageABI,
-          ...log,
-        })
-      )
-      .find((e) => (e.eventName = "NumberChanged"));
+    const numberChangedEvent = safeDecodeLogs(receipt, storageABI).find(
+      (e) => e?.eventName == "NumberChanged"
+    );
     if (!numberChangedEvent) {
       console.warn("couldnt find numberchanged event");
       return;
     }
 
     console.log(numberChangedEvent);
+    toast({
+      status: "success",
+      title: "Number updated",
+      description: `to ${numberChangedEvent.args._new}`,
+    });
     setCurVal(Number(numberChangedEvent.args._new));
-  }, [receipt]);
+  }, [receipt, toast]);
 
   const onSubmit = useCallback(async () => {
-    if (newVal === undefined) return;
+    if (!activeWallet || !chain || newVal === undefined) return;
 
     try {
       const writeResult = await writeAsync({
         args: [BigInt(newVal || 0n)],
       });
       console.info(writeResult);
-      setTx(writeResult);
+      if (isContractWallet) {
+        //try to resolve the underlying transaction
+        const resolvedTx = await resolveSafeTx(chain.id, writeResult.hash);
+        if (!resolvedTx) throw new Error("couldn resolve safe tx");
+        setTx({ hash: resolvedTx });
+      } else {
+        setTx(writeResult);
+      }
     } catch (e: any) {
       console.error(e);
     }
-  }, [newVal, writeAsync]);
+  }, [activeWallet, chain, newVal, writeAsync, isContractWallet]);
 
-  if (!wallet) return <Text>Pls connect</Text>;
+  if (!activeWallet) return <Text>Pls connect</Text>;
   return (
     <main>
       <Text>

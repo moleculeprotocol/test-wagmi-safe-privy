@@ -5,23 +5,23 @@ import { usePrivyWagmi } from "@privy-io/wagmi-connector";
 import { useDisconnect } from "wagmi";
 
 export const LoginButton = () => {
-  const { wallet } = usePrivyWagmi();
+  const { wallet: activeWallet } = usePrivyWagmi();
   const { connectWallet, ready, authenticated, logout } = usePrivy();
 
   const { disconnect } = useDisconnect();
 
   //const { wallets } = useWallets();
 
-  if (wallet) {
+  if (activeWallet) {
     return (
       <Flex>
-        <Text>{wallet.address}</Text>
+        <Text>{activeWallet.address}</Text>
         <Button
           onClick={() => {
             disconnect();
             try {
               logout();
-              wallet.disconnect();
+              activeWallet.disconnect();
             } catch (e: any) {
               console.warn("cant disconnect wallet");
             }

@@ -1,12 +1,11 @@
 "use client";
 
-import { useIsContractWallet } from "@/components/hooks/isContractWallet";
+import { useSafeWaitForTransaction } from "@/components/hooks/useSafeWaitForTransaction";
 import {
   storageABI,
   useStorageRetrieve,
   useStorageStore,
 } from "@/generated/wagmi";
-import { resolveSafeTx } from "@/utils/safe";
 import { safeDecodeLogs } from "@/utils/safeDecodeLogs";
 import {
   Button,
@@ -16,14 +15,14 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
-import { usePrivyWagmi } from "@privy-io/wagmi-connector";
 import { useCallback, useEffect, useState } from "react";
-import { decodeEventLog } from "viem";
-import { useNetwork, useWaitForTransaction } from "wagmi";
+import { useAccount, useNetwork } from "wagmi";
 import { WriteContractResult } from "wagmi/actions";
 
 export default function Home() {
-  const { ready, wallet: activeWallet, setActiveWallet } = usePrivyWagmi();
+  //const { ready, wallet: activeWallet, setActiveWallet } = usePrivyWagmi();
+  const { address } = useAccount();
+
   const { chain } = useNetwork();
 
   const toast = useToast();
@@ -31,11 +30,9 @@ export default function Home() {
   const [curVal, setCurVal] = useState<number>();
   const [tx, setTx] = useState<WriteContractResult>();
 
-  const isContractWallet = useIsContractWallet();
-
   const { data, error, status } = useStorageRetrieve();
   const { writeAsync } = useStorageStore();
-  const { data: receipt, isError, isLoading } = useWaitForTransaction(tx);
+  const { data: receipt, isError, isLoading } = useSafeWaitForTransaction(tx);
 
   useEffect(() => {
     if (data === undefined) return;
@@ -64,27 +61,15 @@ export default function Home() {
   }, [receipt, toast]);
 
   const onSubmit = useCallback(async () => {
-    if (!activeWallet || !chain || newVal === undefined) return;
+    if (!address || !chain || newVal === undefined) return;
 
-    try {
-      const writeResult = await writeAsync({
+    setTx(
+      await writeAsync({
         args: [BigInt(newVal || 0n)],
-      });
-      console.info(writeResult);
-      if (isContractWallet) {
-        //try to resolve the underlying transaction
-        const resolvedTx = await resolveSafeTx(chain.id, writeResult.hash);
-        if (!resolvedTx) throw new Error("couldn resolve safe tx");
-        setTx({ hash: resolvedTx });
-      } else {
-        setTx(writeResult);
-      }
-    } catch (e: any) {
-      console.error(e);
-    }
-  }, [activeWallet, chain, newVal, writeAsync, isContractWallet]);
+      })
+    );
+  }, [address, chain, newVal, writeAsync]);
 
-  if (!activeWallet) return <Text>Pls connect</Text>;
   return (
     <main>
       <Text>

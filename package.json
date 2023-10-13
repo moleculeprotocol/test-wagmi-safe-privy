@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "build": "yarn --cwd packages/wagmi-safe-wait-for-tx build",
+    "build:demo": "yarn --cwd packages/demo build",
     "dev": "yarn build && yarn --cwd packages/demo next dev"
   },
   "workspaces": [

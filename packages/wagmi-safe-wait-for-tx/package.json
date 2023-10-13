@@ -1,23 +1,26 @@
 {
   "name": "@moleculexyz/wagmi-safe-wait-for-tx",
-  "version": "0.0.1",
-  "private": true,
+  "license": "MIT",
+  "description": "wagmi hooks that resolve Safe transaction hashes to onchain transaction hashes by Safe's transaction api",
+  "version": "0.1.0",
   "type": "module",
   "scripts": {
     "clean": "rimraf dist",
-    "build": "yarn clean && yarn build:cjs && yarn build:esm && yarn build:types",
-    "build:cjs": "tsc --project tsconfig.json --module commonjs --moduleResolution Node10 --outDir ./dist/cjs --removeComments && echo > ./dist/cjs/package.json '{\"type\":\"commonjs\"}'",
-    "build:esm": "tsc --project tsconfig.json --module es2015 --outDir ./dist/esm && echo > ./dist/esm/package.json '{\"type\":\"module\",\"sideEffects\":false}'",
-    "build:types": "tsc --project tsconfig.json --module esnext --declarationDir ./dist/types --emitDeclarationOnly --declaration --declarationMap"
+    "build": "yarn clean && yarn build:esm && yarn build:cjs",
+    "build:esm": "tsc --project tsconfig.json --module es2015 --outDir ./dist/esm",
+    "build:cjs": "tsc --project tsconfig.json --module commonjs --moduleResolution Node10 --outDir ./dist/cjs --removeComments && echo > ./dist/cjs/package.json '{\"type\":\"commonjs\"}'"
   },
-  "files": [
-    "dist",
-    "src/**/*.ts",
-    "!src/**/*.test.ts",
-    "!src/**/*.test-d.ts",
-    "!src/**/*.bench.ts",
-    "!src/_test/**/*"
-  ],
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/esm/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "node": "./dist/cjs/index.js",
+      "require": "./dist/cjs/index.js"
+    }
+  },
   "authors": [
     {
       "name": "Molecule TechWG",
@@ -32,9 +35,10 @@
   ],
   "dependencies": {
     "@wagmi/chains": "^1.8.0",
-    "react": "^18",
     "viem": "^1.15.4",
-    "wagmi": "^1.4.3"
+    "wagmi": "^1.4.3",
+    "react": "^18",
+    "react-dom": "^18"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -44,6 +48,8 @@
   },
   "peerDependencies": {
     "viem": ">=0.3.35",
-    "typescript": ">=5.0.4"
+    "typescript": ">=5.0.4",
+    "react": "^18",
+    "react-dom": "^18"
   }
 }

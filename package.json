@@ -3,12 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "yarn --cwd demo next dev",
-    "build:demo": "yarn --cwd demo next build",
-    "start:demo": "yarn --cwd demo next start"
+    "build": "yarn --cwd packages/wagmi-safe-wait-for-tx build",
+    "dev": "yarn build && yarn --cwd packages/demo next dev"
   },
   "workspaces": [
-    "demo",
     "packages/*"
   ],
   "dependencies": {

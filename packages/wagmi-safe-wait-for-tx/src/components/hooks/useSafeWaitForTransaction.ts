@@ -19,7 +19,6 @@ export const useSafeWaitForTransaction = (
   const waitResponse = useWaitForTransaction(safeResult);
 
   useEffect(() => {
-    console.log(isContractWallet, chain);
     if (!writeResult || !chain || isContractWallet === undefined) {
       return;
     }

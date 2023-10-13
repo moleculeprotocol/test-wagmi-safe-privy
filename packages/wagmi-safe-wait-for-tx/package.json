@@ -1,0 +1,58 @@
+{
+  "name": "@moleculexyz/wagmi-safe-wait-for-tx",
+  "license": "MIT",
+  "description": "wagmi hooks that resolve Safe transaction hashes to onchain transaction hashes by Safe's transaction api",
+  "version": "0.1.2",
+  "type": "module",
+  "scripts": {
+    "clean": "rimraf dist",
+    "build": "yarn clean && yarn build:esm && yarn build:cjs",
+    "build:esm": "tsc --project tsconfig.json --module es2015 --outDir ./dist/esm",
+    "build:cjs": "tsc --project tsconfig.json --module commonjs --moduleResolution Node10 --outDir ./dist/cjs --removeComments && echo > ./dist/cjs/package.json '{\"type\":\"commonjs\"}'"
+  },
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
+  "main": "dist/cjs/index.js",
+  "files": [
+    "/dist"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/esm/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "node": "./dist/cjs/index.js",
+      "require": "./dist/cjs/index.js"
+    }
+  },
+  "authors": [
+    {
+      "name": "Molecule TechWG",
+      "email": "tech@molecule.to",
+      "url": "https://molecule.xyz"
+    },
+    {
+      "name": "Stefan Adolf",
+      "email": "stefan@molecule.to",
+      "url": "https://molecule.xyz"
+    }
+  ],
+  "dependencies": {
+    "@wagmi/chains": "^1.8.0",
+    "viem": "^1.15.4",
+    "wagmi": "^1.4.3",
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "eslint": "^8",
+    "typescript": "5.0.4"
+  },
+  "peerDependencies": {
+    "viem": ">=0.3.35",
+    "typescript": ">=5.0.4",
+    "react": "^18",
+    "react-dom": "^18"
+  }
+}

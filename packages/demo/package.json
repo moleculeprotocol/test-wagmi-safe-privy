@@ -1,21 +1,22 @@
 {
-  "name": "safetest",
+  "name": "safetxdemo",
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "yarn --cwd packages/wagmi-safe-wait-for-tx build",
-    "build:demo": "yarn --cwd packages/demo build",
-    "dev": "yarn build && yarn --cwd packages/demo next dev"
+    "postinstall": "wagmi generate && .bin/prefix.sh '// @ts-nocheck' 'src/generated/*.ts'",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "deploy": "next build && touch out/.nojekyll && git add out/ && git commit -m \"Deploy\" && git subtree push --prefix out origin gh-pages"
   },
-  "workspaces": [
-    "packages/*"
-  ],
   "dependencies": {
     "@chakra-ui/next-js": "^2.1.5",
     "@chakra-ui/react": "^2.8.1",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@privy-io/react-auth": "^1.43.2",
+    "@moleculexyz/wagmi-safe-wait-for-tx": "0.1.2",
     "@privy-io/wagmi-connector": "^0.1.4",
     "@wagmi/chains": "^1.8.0",
     "framer-motion": "^10.16.4",

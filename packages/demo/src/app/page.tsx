@@ -1,6 +1,5 @@
 "use client";
 
-import { useSafeWaitForTransaction } from "@/components/hooks/useSafeWaitForTransaction";
 import {
   storageABI,
   useStorageRetrieve,
@@ -15,6 +14,7 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
+import { useSafeWaitForTransaction } from "@moleculexyz/wagmi-safe-wait-for-tx";
 import { useCallback, useEffect, useState } from "react";
 import { useAccount, useNetwork } from "wagmi";
 import { WriteContractResult } from "wagmi/actions";

@@ -38,21 +38,22 @@
   ],
   "dependencies": {
     "@wagmi/chains": "^1.8.0",
-    "viem": "^1.15.4",
-    "wagmi": "^1.4.3",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "viem": "^1.15.4",
+    "wagmi": "^1.4.3"
   },
   "devDependencies": {
     "@types/node": "^20",
     "@types/react": "^18",
     "eslint": "^8",
+    "rimraf": "^5.0.5",
     "typescript": "5.0.4"
   },
   "peerDependencies": {
-    "viem": ">=0.3.35",
-    "typescript": ">=5.0.4",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "typescript": ">=5.0.4",
+    "viem": ">=0.3.35"
   }
 }

@@ -1,5 +1,5 @@
-import { useIsContractWallet } from "@/components/hooks/isContractWallet";
-import { resolveSafeTx } from "@/utils/safe";
+import { useIsContractWallet } from "./isContractWallet";
+import { resolveSafeTx } from "../../utils/safe";
 import { useEffect, useState } from "react";
 import { useAccount, useNetwork, useWaitForTransaction } from "wagmi";
 import { WriteContractResult } from "wagmi/actions";

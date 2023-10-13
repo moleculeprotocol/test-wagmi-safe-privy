@@ -12,7 +12,7 @@ import {
   optimism,
   polygon,
 } from "viem/chains";
-import { delay } from "./delay";
+import { delay } from "./delay.js";
 
 type TxServiceApiTransactionResponse = {
   safe: Address;

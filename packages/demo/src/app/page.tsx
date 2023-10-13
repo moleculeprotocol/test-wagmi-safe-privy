@@ -1,6 +1,5 @@
 "use client";
 
-import { useSafeWaitForTransaction } from "@/components/hooks/useSafeWaitForTransaction";
 import {
   storageABI,
   useStorageRetrieve,
@@ -18,6 +17,7 @@ import {
 import { useCallback, useEffect, useState } from "react";
 import { useAccount, useNetwork } from "wagmi";
 import { WriteContractResult } from "wagmi/actions";
+import { useSafeWaitForTransaction } from "@moleculexyz/wagmi-safe-wait-for-tx";
 
 export default function Home() {
   //const { ready, wallet: activeWallet, setActiveWallet } = usePrivyWagmi();

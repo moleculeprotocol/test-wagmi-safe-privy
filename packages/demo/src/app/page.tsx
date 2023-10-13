@@ -14,10 +14,10 @@ import {
   Text,
   useToast,
 } from "@chakra-ui/react";
+import { useSafeWaitForTransaction } from "@moleculexyz/wagmi-safe-wait-for-tx";
 import { useCallback, useEffect, useState } from "react";
 import { useAccount, useNetwork } from "wagmi";
 import { WriteContractResult } from "wagmi/actions";
-import { useSafeWaitForTransaction } from "@moleculexyz/wagmi-safe-wait-for-tx";
 
 export default function Home() {
   //const { ready, wallet: activeWallet, setActiveWallet } = usePrivyWagmi();

@@ -23,8 +23,7 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
     [infuraProvider({ apiKey: process.env.NEXT_PUBLIC_INFURA_API_KEY! })]
   );
 
-  //you can extend the public client here:
-  //const { publicClient } = configureChainsConfig;
+  // const { publicClient } = configureChainsConfig;
   // const myPublicClient = ({ chainId }: { chainId?: number | undefined }) => {
   //   const origClient = publicClient({ chainId });
   //   const fooClient = origClient.extend((client) => ({
@@ -33,21 +32,19 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
   //       return origClient.getTransaction({ hash });
   //     },
   //     waitForTransactionReceipt: async (
-  //       params: WaitForTransactionReceiptParameters
+  //       params: WaitForTransactionReceiptParameters & {
+  //         address?: Address;
+  //       }
   //     ) => {
   //       console.log("WAIT", origClient.account, params);
   //       return origClient.waitForTransactionReceipt(params);
   //     },
-  //     // sendRawTransaction: async (args: SendRawTransactionParameters) => {
-  //     //   console.log("raw transaction");
-  //     //   return origClient.sendRawTransaction(args);
-  //     // },
   //   }));
-  //   return fooClient;
-  //   // createClient({
+  //   // return createClient({
   //   //   chain: origClient.chain,
   //   //   transport: origClient.transport as unknown as Transport,
   //   // });
+  //   return fooClient;
   // };
 
   return (
@@ -77,7 +74,12 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
             },
           }}
         >
-          <PrivyWagmiConnector wagmiChainsConfig={configureChainsConfig}>
+          <PrivyWagmiConnector
+            wagmiChainsConfig={{
+              ...configureChainsConfig,
+              //publicClient: myPublicClient,
+            }}
+          >
             {children}
           </PrivyWagmiConnector>
         </PrivyProvider>

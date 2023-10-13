@@ -2,7 +2,7 @@
   "name": "@moleculexyz/wagmi-safe-wait-for-tx",
   "license": "MIT",
   "description": "wagmi hooks that resolve Safe transaction hashes to onchain transaction hashes by Safe's transaction api",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "scripts": {
     "clean": "rimraf dist",

@@ -1,9 +1,16 @@
 {
   "name": "@moleculexyz/wagmi-safe-wait-for-tx",
   "license": "MIT",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "wagmi hooks that resolve Safe transaction hashes to onchain transaction hashes by Safe's transaction api",
   "repository": "moleculeprotocol/test-wagmi-safe-privy",
+  "keywords": [
+    "web3",
+    "viem",
+    "wagmi",
+    "ethereum",
+    "transaction"
+  ],
   "type": "module",
   "scripts": {
     "clean": "rimraf dist",
@@ -14,6 +21,7 @@
   "module": "dist/esm/index.js",
   "types": "dist/esm/index.d.ts",
   "main": "dist/cjs/index.js",
+  "sideEffects": false,
   "files": [
     "/dist"
   ],
@@ -41,7 +49,7 @@
     "@wagmi/chains": "^1.8.0",
     "react": "^18",
     "react-dom": "^18",
-    "viem": "^1.15.4",
+    "viem": "^1.15.0",
     "wagmi": "^1.4.3"
   },
   "devDependencies": {
@@ -55,6 +63,6 @@
     "react": "^18",
     "react-dom": "^18",
     "typescript": ">=5.0.4",
-    "viem": ">=0.3.35"
+    "viem": ">=1.15.0"
   }
 }

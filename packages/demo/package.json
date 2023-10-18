@@ -16,7 +16,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@privy-io/react-auth": "^1.43.2",
-    "@moleculexyz/wagmi-safe-wait-for-tx": "0.1.5",
+    "@moleculexyz/wagmi-safe-wait-for-tx": "0.1.6",
     "@privy-io/wagmi-connector": "^0.1.4",
     "@wagmi/chains": "^1.8.0",
     "framer-motion": "^10.16.4",

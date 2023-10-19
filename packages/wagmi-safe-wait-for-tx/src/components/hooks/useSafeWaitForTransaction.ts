@@ -1,4 +1,4 @@
-import { useIsSafeWallet } from "./useIsSafeWallet";
+import { useIsContractWallet } from "./useIsContractWallet";
 import { resolveSafeTx } from "../../utils/safe";
 import { useEffect, useState } from "react";
 import { useAccount, useNetwork, useWaitForTransaction } from "wagmi";
@@ -9,7 +9,7 @@ export const useSafeWaitForTransaction = (
 ) => {
   const { address } = useAccount();
 
-  const isSafeWallet = useIsSafeWallet(address);
+  const { isSafe: isSafeWallet } = useIsContractWallet(address);
   const { chain } = useNetwork();
 
   const [safeResult, setSafeResult] = useState<

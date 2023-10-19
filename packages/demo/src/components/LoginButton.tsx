@@ -1,6 +1,6 @@
 "use client";
 import { Button, Flex, Text, VStack } from "@chakra-ui/react";
-import { useIsSafeWallet } from "@moleculexyz/wagmi-safe-wait-for-tx";
+import { useIsContractWallet } from "@moleculexyz/wagmi-safe-wait-for-tx";
 import { usePrivy, useWallets } from "@privy-io/react-auth";
 import { usePrivyWagmi } from "@privy-io/wagmi-connector";
 import { useCallback } from "react";
@@ -9,7 +9,7 @@ import { Address, useDisconnect } from "wagmi";
 export const LoginButton = () => {
   const { wallet: activeWallet, ready, setActiveWallet } = usePrivyWagmi();
   const { connectWallet, authenticated, logout, login } = usePrivy();
-  const isContractWallet = useIsSafeWallet(
+  const isContractWallet = useIsContractWallet(
     activeWallet?.address as Address | undefined
   );
 

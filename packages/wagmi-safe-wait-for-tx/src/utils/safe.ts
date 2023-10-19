@@ -96,16 +96,25 @@ export const resolveSafeTx = async (
   return response.transactionHash;
 };
 
-export const isSafeWallet = async (
+export const isContractWallet = async (
   publicClient: PublicClient,
   address: Address
-) => {
+): Promise<{
+  isContract?: boolean;
+  isSafe?: boolean;
+}> => {
   const bytecode = await publicClient.getBytecode({ address });
 
   if (bytecode?.length == 0) {
-    return false;
+    return {
+      isContract: false,
+      isSafe: false,
+    };
   } else {
-    //todo: Safes *can* be deployed without a proxy
-    return PROXY_BYTECODE === bytecode;
+    return {
+      isContract: true,
+      //todo: Safes *can* be deployed without a proxy
+      isSafe: PROXY_BYTECODE === bytecode,
+    };
   }
 };

@@ -4,7 +4,7 @@ import {
   WaitForTransactionReceiptParameters,
   WaitForTransactionReceiptReturnType,
 } from "viem";
-import { isSafeWallet, resolveSafeTx } from "./safe";
+import { isContractWallet, resolveSafeTx } from "./safe";
 
 /**
  * usable in a plain viem context
@@ -23,7 +23,7 @@ export const safeWaitForTransactionReceipt = async (
     throw new Error("no chain on public client");
   }
 
-  const isSafe = await isSafeWallet(publicClient, params.address);
+  const { isSafe } = await isContractWallet(publicClient, params.address);
 
   if (isSafe) {
     //try to resolve the underlying transaction

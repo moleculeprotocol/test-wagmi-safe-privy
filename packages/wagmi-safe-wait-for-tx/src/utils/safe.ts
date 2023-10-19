@@ -105,7 +105,7 @@ export const isContractWallet = async (
 }> => {
   const bytecode = await publicClient.getBytecode({ address });
 
-  if (bytecode?.length == 0) {
+  if (!bytecode || bytecode.length == 0) {
     return {
       isContract: false,
       isSafe: false,

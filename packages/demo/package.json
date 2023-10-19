@@ -27,12 +27,12 @@
     "wagmi": "^1.4.3"
   },
   "devDependencies": {
-    "@types/node": "^20",
+    "@types/node": "^18",
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "@wagmi/cli": "^1.5.2",
     "eslint": "^8",
     "eslint-config-next": "13.5.4",
-    "typescript": "5.0.4"
+    "typescript": "^5.0.4"
   }
 }

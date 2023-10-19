@@ -45,24 +45,20 @@
       "url": "https://molecule.xyz"
     }
   ],
-  "dependencies": {
+  "devDependencies": {
+    "@types/node": "^18",
+    "@types/react": "^18",
     "@wagmi/chains": "^1.8.0",
+    "eslint": "^8",
+    "fix-esm-import-path": "^1.4.0",
     "react": "^18",
-    "react-dom": "^18",
+    "rimraf": "^5.0.5",
+    "typescript": "^5.0.4",
     "viem": "^1.15.4",
     "wagmi": "^1.4.3"
   },
-  "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^18",
-    "eslint": "^8",
-    "fix-esm-import-path": "^1.4.0",
-    "rimraf": "^5.0.5",
-    "typescript": "5.0.4"
-  },
   "peerDependencies": {
     "react": "^18",
-    "react-dom": "^18",
     "typescript": ">=5.0.4",
     "viem": ">=1.15.0"
   }

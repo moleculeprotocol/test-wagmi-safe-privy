@@ -1,5 +1,6 @@
 "use client";
 
+import { ActiveAddress } from "@/components/ActiveAddress";
 import {
   storageABI,
   useStorageRetrieve,
@@ -108,6 +109,7 @@ export default function Home() {
           </Flex>
         )}
       </form>
+      <ActiveAddress />
     </main>
   );
 }

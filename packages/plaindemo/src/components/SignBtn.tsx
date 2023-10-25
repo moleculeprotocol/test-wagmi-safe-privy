@@ -1,8 +1,11 @@
+import { useAccount } from "wagmi";
 import { useAuth } from "../context/AuthContext";
+import { ConnectKitButton } from "connectkit";
 
 export const AuthSigPre = () => {
   const { authSig } = useAuth();
 
+  if (!authSig) return <></>;
   return (
     <>
       <h2>AuthSig</h2>
@@ -17,10 +20,21 @@ export const AuthSigPre = () => {
 
 export const SigninButton = () => {
   const { signin, authSig } = useAuth();
+  const { address } = useAccount();
 
   return (
-    <>
-      <button onClick={() => signin()}>sign in</button>
-    </>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
+        gap: "2rem",
+      }}
+    >
+      <ConnectKitButton />
+      {authSig
+        ? "signed in"
+        : address && <button onClick={() => signin()}>sign in</button>}
+    </div>
   );
 };

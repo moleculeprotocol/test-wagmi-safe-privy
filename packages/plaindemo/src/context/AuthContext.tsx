@@ -91,7 +91,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       ...newState,
     }));
     return newState;
-  }, [address, chain?.id, signMessageAsync, state.nonce]);
+  }, [address, chain?.id, isContract, signMessageAsync, state.nonce]);
 
   return (
     <AuthContext.Provider

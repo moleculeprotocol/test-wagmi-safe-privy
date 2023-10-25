@@ -1,12 +1,25 @@
-import { useAuth } from "./AuthContext";
+import { useAuth } from "../context/AuthContext";
+
+export const AuthSigPre = () => {
+  const { authSig } = useAuth();
+
+  return (
+    <>
+      <h2>AuthSig</h2>
+      <div style={{ maxWidth: "80vw" }}>
+        <pre style={{ whiteSpace: "pre-wrap" }}>
+          {JSON.stringify(authSig, null, 2)}
+        </pre>
+      </div>
+    </>
+  );
+};
 
 export const SigninButton = () => {
   const { signin, authSig } = useAuth();
 
   return (
     <>
-      <h2>AuthSig</h2>
-      <p>{JSON.stringify(authSig, null, 2)}</p>
       <button onClick={() => signin()}>sign in</button>
     </>
   );

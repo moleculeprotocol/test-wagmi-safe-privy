@@ -7,7 +7,9 @@ import {
 } from "connectkit";
 import { useEffect, useState } from "react";
 import { Chain, foundry, goerli, localhost, mainnet } from "viem/chains";
-import { AuthProvider } from "./AuthContext";
+import { AuthProvider } from "../context/AuthContext";
+import { LitProvider } from "@/context/LitContext";
+//import { AuthProvider } from "./AuthContext";
 
 // const config = createConfig(
 //   getDefaultConfig({
@@ -16,32 +18,24 @@ import { AuthProvider } from "./AuthContext";
 //     appName: "Plain wagmi demo",
 //   })
 // );
+const _config = createConfig(
+  getDefaultConfig({
+    appName: "IP NFT",
+    alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_KEY,
+    walletConnectProjectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID as string,
+    infuraId: process.env.NEXT_PUBLIC_INFURA_ID,
+    autoConnect: true,
+    chains: [goerli, mainnet],
+  })
+);
 
 export const Providers = ({ children }: { children: React.ReactNode }) => {
-  const [config, setConfig] = useState<any & Config>();
-
-  useEffect(() => {
-    const config = createConfig(
-      getDefaultConfig({
-        appName: "IP NFT",
-        alchemyId: process.env.NEXT_PUBLIC_ALCHEMY_KEY,
-        walletConnectProjectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID as string,
-        infuraId: process.env.NEXT_PUBLIC_INFURA_ID,
-        autoConnect: true,
-        chains: [goerli, mainnet],
-      })
-    );
-    setConfig(config);
-  }, []);
-
-  if (!config) {
-    return <p>initializing</p>;
-  }
-
   return (
-    <WagmiConfig config={config}>
+    <WagmiConfig config={_config}>
       <ConnectKitProvider>
-        <AuthProvider>{children}</AuthProvider>
+        <AuthProvider>
+          <LitProvider>{children}</LitProvider>
+        </AuthProvider>
       </ConnectKitProvider>
     </WagmiConfig>
   );

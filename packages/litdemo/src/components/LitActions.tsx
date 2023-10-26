@@ -23,35 +23,35 @@ export const LitActions = () => {
   const { lit } = useLit();
   const { authSig } = useAuth();
 
-  const [encrypted, setEncrypted] = useState<{ key: string; message: Blob }>();
+  const [encrypted, setEncrypted] = useState<{
+    ciphertext: string;
+    encryptedHash: string;
+  }>();
   const [decrypted, setDecrypted] = useState<{
-    key: string;
     message: string;
   }>();
 
   const encrypt = useCallback(async () => {
     if (!lit || !chain) return;
-
-    const { encryptedString, symmetricKey } = await LitJsSdk.encryptString(
-      "this is a secret message"
-    );
-
     try {
-      const encryptedSymmetricKey = await lit.saveEncryptionKey({
-        accessControlConditions: [
-          {
-            ...accessControlConditions,
-            chain: chain.network,
-          },
-        ],
-        symmetricKey,
-        authSig,
-        chain: chain.network,
-      });
+      const { ciphertext, dataToEncryptHash } = await LitJsSdk.encryptString(
+        {
+          accessControlConditions: [
+            {
+              ...accessControlConditions,
+              chain: chain.network,
+            },
+          ],
+          authSig,
+          chain: chain.network,
+          dataToEncrypt: "this is a secret message",
+        },
+        lit
+      );
 
       setEncrypted({
-        key: LitJsSdk.uint8arrayToString(encryptedSymmetricKey, "base16"),
-        message: encryptedString,
+        ciphertext,
+        encryptedHash: dataToEncryptHash,
       });
     } catch (e: any) {
       console.error(e.message);
@@ -62,25 +62,23 @@ export const LitActions = () => {
   const decrypt = useCallback(async () => {
     if (!lit || !chain || !encrypted) return;
 
-    const decryptedKey = await lit.getEncryptionKey({
-      accessControlConditions: [
-        {
-          ...accessControlConditions,
-          chain: chain.network,
-        },
-      ],
-      toDecrypt: encrypted.key,
-      authSig,
-      chain: chain.network,
-    });
-
-    const decryptedString = await LitJsSdk.decryptString(
-      encrypted.message,
-      decryptedKey
+    const decryptedString = await LitJsSdk.decryptToString(
+      {
+        accessControlConditions: [
+          {
+            ...accessControlConditions,
+            chain: chain.network,
+          },
+        ],
+        ciphertext: encrypted.ciphertext,
+        dataToEncryptHash: encrypted.encryptedHash,
+        authSig,
+        chain: chain.network,
+      },
+      lit
     );
 
     setDecrypted({
-      key: LitJsSdk.uint8arrayToString(decryptedKey, "base16"),
       message: decryptedString,
     });
   }, [authSig, chain, encrypted, lit]);
@@ -104,8 +102,8 @@ export const LitActions = () => {
       <div style={{ maxWidth: "100%", wordWrap: "break-word" }}>
         {encrypted && (
           <p>
-            <b>Encrypted Key</b>
-            {encrypted.key}
+            <b>Encrypted Hash</b>
+            {encrypted.encryptedHash}
           </p>
         )}
         {decrypted && (

@@ -16,7 +16,7 @@ const LitProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     const client = new LitJsSdk.LitNodeClient({
-      litNetwork: "serrano",
+      litNetwork: "cayenne",
     });
     client.connect().then((e) => {
       console.debug("lit network connected");

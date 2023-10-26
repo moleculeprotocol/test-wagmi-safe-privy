@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@lit-protocol/lit-node-client": "^2.2.61",
+    "@lit-protocol/lit-node-client": "^3.0.2",
     "@moleculexyz/wagmi-safe-wait-for-tx": "0.2.0",
     "connectkit": "^1.5.3",
     "ethers": "^6.8.0",

@@ -1,9 +1,9 @@
-import { useAccount, usePublicClient } from "wagmi";
-import { useAuth } from "../context/AuthContext";
-import { ConnectKitButton } from "connectkit";
 import { useIsContractWallet } from "@moleculexyz/wagmi-safe-wait-for-tx";
+import { ConnectKitButton } from "connectkit";
 import { useCallback, useState } from "react";
 import { hashMessage } from "viem";
+import { useAccount, usePublicClient } from "wagmi";
+import { useAuth } from "../context/AuthContext";
 
 export const AuthSigPre = () => {
   const { authSig } = useAuth();
@@ -87,7 +87,7 @@ export const VerifySignature = () => {
     //note that viem is using https://eips.ethereum.org/EIPS/eip-6492 under the hood
     setIsSignatureValid(
       await publicClient.verifyMessage({
-        address: authSig.address,
+        address: authSig.address as `0x${string}`,
         message: authSig.signedMessage,
         signature: authSig.sig,
       })
@@ -125,7 +125,7 @@ export const VerifySignature = () => {
 };
 
 export const SigninButton = () => {
-  const { signin, authSig } = useAuth();
+  const { signin, authSig, signinWithLit } = useAuth();
   const { address } = useAccount();
 
   return (
@@ -137,10 +137,15 @@ export const SigninButton = () => {
         gap: "2rem",
       }}
     >
+      {<button onClick={() => signinWithLit()}>sign in with lit</button>}
       <ConnectKitButton />
       {authSig
         ? "signed in"
-        : address && <button onClick={() => signin()}>sign in</button>}
+        : address && (
+            <>
+              <button onClick={() => signin()}>sign in</button>
+            </>
+          )}
     </div>
   );
 };

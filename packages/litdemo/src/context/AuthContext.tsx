@@ -3,7 +3,9 @@
 import { useIsContractWallet } from "@moleculexyz/wagmi-safe-wait-for-tx";
 import React, { useCallback, useContext, useState } from "react";
 import { SiweMessage } from "siwe";
-import { recoverMessageAddress } from "viem";
+import { hashMessage, recoverMessageAddress } from "viem";
+import { checkAndSignAuthMessage } from "@lit-protocol/lit-node-client";
+
 import { useAccount, useNetwork, usePublicClient, useSignMessage } from "wagmi";
 
 const SIWE_KEY = "foo-siwe";
@@ -12,13 +14,14 @@ export interface AuthSig {
   sig: any;
   derivedVia: string;
   signedMessage: string;
-  address: `0x${string}`;
+  address: string;
 }
 
 interface IAuthContext {
   siwe?: SiweMessage;
   authSig?: AuthSig;
   signin: () => Promise<void | any>;
+  signinWithLit: () => Promise<void | any>;
   signout: () => void;
 }
 
@@ -30,6 +33,7 @@ type AuthState = {
 
 const AuthContext = React.createContext<IAuthContext>({
   signin: async () => Promise.resolve(),
+  signinWithLit: async () => Promise.resolve(),
   signout: () => undefined,
 });
 
@@ -49,10 +53,27 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     })();
   };
 
+  const signinWithLit = useCallback(async () => {
+    const authSig = await checkAndSignAuthMessage({
+      chain: "goerli",
+      walletConnectProjectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID as string,
+      statement: "Sign in with Ethereum.",
+      uri: window.location.host,
+    });
+
+    setState({
+      authSig,
+      nonce: "???",
+    });
+  }, []);
+
   const signin = useCallback(async () => {
     const chainId = chain?.id;
 
     if (!state.nonce || !address || !chainId) return;
+
+    const issuedAt = new Date();
+    const expires = new Date(issuedAt.getTime() + 60 * 60 * 24 * 31 * 1000);
 
     const message = new SiweMessage({
       domain: window.location.host,
@@ -62,11 +83,13 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       version: "1",
       chainId,
       nonce: state.nonce,
+      issuedAt: issuedAt.toISOString(),
+      expirationTime: expires.toISOString(),
     });
 
     const messageToSign = message.prepareMessage();
     const signature = await signMessageAsync({
-      message: messageToSign as `0x${string}`,
+      message: messageToSign,
     });
 
     // see https://github.com/LIT-Protocol/hotwallet-signing-example/blob/main/sign.js
@@ -95,6 +118,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       value={{
         ...state,
         signin,
+        signinWithLit,
         signout,
       }}
     >

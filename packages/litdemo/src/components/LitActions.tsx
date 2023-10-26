@@ -36,22 +36,27 @@ export const LitActions = () => {
       "this is a secret message"
     );
 
-    const encryptedSymmetricKey = await lit.saveEncryptionKey({
-      accessControlConditions: [
-        {
-          ...accessControlConditions,
-          chain: chain.network,
-        },
-      ],
-      symmetricKey,
-      authSig,
-      chain: chain.network,
-    });
+    try {
+      const encryptedSymmetricKey = await lit.saveEncryptionKey({
+        accessControlConditions: [
+          {
+            ...accessControlConditions,
+            chain: chain.network,
+          },
+        ],
+        symmetricKey,
+        authSig,
+        chain: chain.network,
+      });
 
-    setEncrypted({
-      key: LitJsSdk.uint8arrayToString(encryptedSymmetricKey, "base16"),
-      message: encryptedString,
-    });
+      setEncrypted({
+        key: LitJsSdk.uint8arrayToString(encryptedSymmetricKey, "base16"),
+        message: encryptedString,
+      });
+    } catch (e: any) {
+      console.error(e.message);
+      alert(`failed ${e.message}`);
+    }
   }, [authSig, chain, lit]);
 
   const decrypt = useCallback(async () => {

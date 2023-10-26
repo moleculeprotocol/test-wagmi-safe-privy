@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { ConnectKitButton } from "connectkit";
 import { useIsContractWallet } from "@moleculexyz/wagmi-safe-wait-for-tx";
 import { useCallback, useState } from "react";
+import { hashMessage } from "viem";
 
 export const AuthSigPre = () => {
   const { authSig } = useAuth();
@@ -21,16 +22,69 @@ export const AuthSigPre = () => {
 };
 
 export const VerifySignature = () => {
-  const { isContract } = useIsContractWallet();
+  const { address } = useAccount();
+  const { isSafe, isContract } = useIsContractWallet(address);
   const { authSig, siwe } = useAuth();
   const publicClient = usePublicClient();
 
   const [isSignatureValid, setIsSignatureValid] = useState<boolean>();
+  const [validatedSigOnChain, setValidatedSigOnChain] = useState<string>();
+
+  const verifySignatureOnSafeContract = useCallback(async () => {
+    if (!authSig || !publicClient || !address) return;
+
+    const eip1271Abi = [
+      {
+        inputs: [
+          {
+            internalType: "bytes32",
+            name: "hash",
+            type: "bytes32",
+          },
+          {
+            internalType: "bytes",
+            name: "signature",
+            type: "bytes",
+          },
+        ],
+        name: "isValidSignature",
+        outputs: [
+          {
+            internalType: "bytes4",
+            name: "magicValue",
+            type: "bytes4",
+          },
+        ],
+        stateMutability: "view",
+        type: "function",
+      },
+    ];
+    const hashedMessage = hashMessage(authSig.signedMessage);
+    console.log("hashed message", hashedMessage);
+    const retVal = await publicClient.readContract({
+      address: address,
+      abi: eip1271Abi,
+      functionName: "isValidSignature",
+      args: [hashedMessage, authSig.sig],
+    });
+
+    setValidatedSigOnChain(retVal as string);
+  }, [address, authSig, publicClient]);
 
   const verifySignature = useCallback(async () => {
     if (!authSig || !publicClient) return;
 
-    console.log("verifying", authSig);
+    console.log(
+      "verifying authsig (Contract: %s | Safe: %s)",
+      isContract,
+      isSafe,
+      authSig
+    );
+    if (isSafe) {
+      verifySignatureOnSafeContract();
+    }
+
+    //note that viem is using https://eips.ethereum.org/EIPS/eip-6492 under the hood
     setIsSignatureValid(
       await publicClient.verifyMessage({
         address: authSig.address,
@@ -38,7 +92,13 @@ export const VerifySignature = () => {
         signature: authSig.sig,
       })
     );
-  }, [authSig, publicClient]);
+  }, [
+    authSig,
+    publicClient,
+    isContract,
+    isSafe,
+    verifySignatureOnSafeContract,
+  ]);
 
   if (!authSig) return undefined;
 
@@ -49,6 +109,15 @@ export const VerifySignature = () => {
       {typeof isSignatureValid === "boolean" && (
         <p>
           Signature is <b>{isSignatureValid ? "valid" : "invalid"}</b>
+        </p>
+      )}
+      {validatedSigOnChain && (
+        <p>
+          call result of isValidSignature(bytes32,bytes):{" "}
+          <b>
+            {validatedSigOnChain}{" "}
+            {validatedSigOnChain == "0x1626ba7e" ? "(valid)" : "(invalid)"}
+          </b>
         </p>
       )}
     </div>

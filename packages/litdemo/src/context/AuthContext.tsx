@@ -71,15 +71,12 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     // see https://github.com/LIT-Protocol/hotwallet-signing-example/blob/main/sign.js
     // https://developer.litprotocol.com/SDK/Explanation/WalletSigs/authSig
-    const recoveredAddress = await recoverMessageAddress({
-      message: messageToSign,
-      signature,
-    });
+
     const derivedVia = isContract ? "EIP1271" : "web3.eth.personal.sign";
     const newState = {
       siwe: message,
       authSig: {
-        address: recoveredAddress,
+        address: address,
         sig: signature,
         derivedVia,
         signedMessage: messageToSign,

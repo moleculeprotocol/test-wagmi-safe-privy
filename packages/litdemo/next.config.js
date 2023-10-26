@@ -3,7 +3,7 @@ const webpack = require("webpack");
 
 module.exports = {
   output: "export",
-  basePath: "/litdemo",
+
   webpack: (config) => {
     config.resolve.fallback = { fs: false, net: false, tls: false };
     config.plugins = [

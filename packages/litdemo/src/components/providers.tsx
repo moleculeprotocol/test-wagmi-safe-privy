@@ -1,23 +1,10 @@
 "use client";
-import { WagmiConfig, createConfig, Config } from "wagmi";
-import {
-  ConnectKitProvider,
-  ConnectKitButton,
-  getDefaultConfig,
-} from "connectkit";
-import { useEffect, useState } from "react";
-import { Chain, foundry, goerli, localhost, mainnet } from "viem/chains";
-import { AuthProvider } from "../context/AuthContext";
 import { LitProvider } from "@/context/LitContext";
-//import { AuthProvider } from "./AuthContext";
+import { ConnectKitProvider, getDefaultConfig } from "connectkit";
+import { goerli, mainnet } from "viem/chains";
+import { WagmiConfig, createConfig } from "wagmi";
+import { AuthProvider } from "../context/AuthContext";
 
-// const config = createConfig(
-//   getDefaultConfig({
-//     infuraId: process.env.NEXT_PUBLIC_INFURA_API_KEY,
-//     walletConnectProjectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID!,
-//     appName: "Plain wagmi demo",
-//   })
-// );
 const _config = createConfig(
   getDefaultConfig({
     appName: "IP NFT",

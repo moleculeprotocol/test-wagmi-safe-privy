@@ -1,6 +1,8 @@
-import { useAccount } from "wagmi";
+import { useAccount, usePublicClient } from "wagmi";
 import { useAuth } from "../context/AuthContext";
 import { ConnectKitButton } from "connectkit";
+import { useIsContractWallet } from "@moleculexyz/wagmi-safe-wait-for-tx";
+import { useCallback, useState } from "react";
 
 export const AuthSigPre = () => {
   const { authSig } = useAuth();
@@ -15,6 +17,41 @@ export const AuthSigPre = () => {
         </pre>
       </div>
     </>
+  );
+};
+
+export const VerifySignature = () => {
+  const { isContract } = useIsContractWallet();
+  const { authSig, siwe } = useAuth();
+  const publicClient = usePublicClient();
+
+  const [isSignatureValid, setIsSignatureValid] = useState<boolean>();
+
+  const verifySignature = useCallback(async () => {
+    if (!authSig || !publicClient) return;
+
+    console.log("verifying", authSig);
+    setIsSignatureValid(
+      await publicClient.verifyMessage({
+        address: authSig.address,
+        message: authSig.signedMessage,
+        signature: authSig.sig,
+      })
+    );
+  }, [authSig, publicClient]);
+
+  if (!authSig) return undefined;
+
+  return (
+    <div>
+      <button onClick={verifySignature}>verify signature</button>
+
+      {typeof isSignatureValid === "boolean" && (
+        <p>
+          Signature is <b>{isSignatureValid ? "valid" : "invalid"}</b>
+        </p>
+      )}
+    </div>
   );
 };
 

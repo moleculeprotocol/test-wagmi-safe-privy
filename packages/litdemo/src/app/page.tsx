@@ -2,7 +2,11 @@
 
 import { ActiveAddress } from "@/components/ActiveAddress";
 import { LitActions } from "@/components/LitActions";
-import { AuthSigPre, SigninButton } from "@/components/SignBtn";
+import {
+  AuthSigPre,
+  SigninButton,
+  VerifySignature,
+} from "@/components/SignBtn";
 import styles from "./page.module.css";
 export default function Home() {
   return (
@@ -11,6 +15,7 @@ export default function Home() {
       <SigninButton />
       <ActiveAddress />
       <AuthSigPre />
+      <VerifySignature />
       <LitActions />
     </main>
   );

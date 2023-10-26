@@ -12,7 +12,7 @@ export interface AuthSig {
   sig: any;
   derivedVia: string;
   signedMessage: string;
-  address: string;
+  address: `0x${string}`;
 }
 
 interface IAuthContext {
@@ -36,7 +36,7 @@ const AuthContext = React.createContext<IAuthContext>({
 const useAuth = () => useContext(AuthContext);
 
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [state, setState] = useState<AuthState>({ nonce: "moo123123" });
+  const [state, setState] = useState<AuthState>({ nonce: "somenonce" });
 
   const { address } = useAccount();
   const { isContract, isSafe } = useIsContractWallet(address);
@@ -53,7 +53,7 @@ const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     const chainId = chain?.id;
 
     if (!state.nonce || !address || !chainId) return;
-    console.log(state.nonce);
+
     const message = new SiweMessage({
       domain: window.location.host,
       address,
